@@ -1,0 +1,161 @@
+---
+title: "Regional Differences in Health"
+author: "Evangeline Warren"
+date: "11/30/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library (readstata13)
+library (haven)
+library (lattice)
+library (stargazer)
+```
+
+## Overview
+This project examines the relationship between skin tone and health and begins to interrogate how regional differences mediate this relationship. 
+
+#### Data
+The data comes from the GSS dataset and compiles all years with data for respondent's skin tone as assessed by the interviewer. It is available for download from the [GSS Data Explorer](https://gssdataexplorer.norc.org) site. 
+
+I included the following variables:  
+* R's Skin Tone (ratetone)  
+* R's Self-Rated Health (health)  
+* R's Days of activity limitation in the last month (hlthdays)  
+* R's Days of poor mental health in the last month (mntlhlth)  
+* R’s Health in general (health1)  
+* Region (region)
+
+## Packages
+For this project, I used the following packages to ensrue I was able to read .dta files and so that I could make desired graphs. 
+
+``` {r library}
+#Setup
+library (readstata13)
+library (haven)
+library (lattice)
+library (stargazer)
+
+```
+
+## Cleaning
+Data was cleaned in Stata (code in Stata folder) and then imported into R. I relabled the region data to have the correct labels and then relabelled health and health1 to have the same names for categories.  
+```{r importing and cleaning}
+
+#Data has been cleaned in stata and analytic sample has been restricted.
+#Import cleaned data from .dta file
+
+#Personal
+Sample <-read_dta("~/Documents/GitHub/WarrenFinalGISD/Data and Analysis/ColorismCleaned.dta")
+#View(Sample)
+
+#Touch up the data to reflect qualitative Responses
+
+Sample$region <- factor(Sample$region,
+                    levels = c(1:9),
+                    labels = c("New England"
+                               , "Mid Atlantic"
+                               , "E. Nor. Central"
+                               , "W. Nor. Central"
+                               , "South Atlantic"
+                               , "E. Sou. Central"
+                               , "W. Sou. Central"
+                               , "Mountain"
+                               , "Pacific"))
+
+
+Sample$healthcl <- factor(Sample$healthcl,
+                    levels = c(1:4),
+                    labels = c("Excellent"
+                               , "Good"
+                               , "Fair"
+                               , "Poor"))
+
+Sample$health1cl <- factor(Sample$health1cl,
+                          levels = c(1:4),
+                          labels = c("Excellent"
+                                     , "Good"
+                                     , "Fair"
+                                     , "Poor"))
+```
+
+## Initial Descriptive Plots
+
+To understand the data, I made a histogram of the skin tone distribution. This revealed that the dataset is heavily skewed towards lighter skin tones
+
+```{r histogram, echo=FALSE}
+#Descriptive Plots
+histogram(Sample$ratetonecl,
+     xlab = "Assigned Skin Tone of R",
+     main = "Distribution of Skin Tone in Sample",
+     type = "count",
+     breaks=c(1,2,3,4,5,6,7,8,9,10),
+     col = c("purple"))
+```
+
+## Analytic Graphs
+
+Because this project was partially comparitive (looking at national trends vs regional trends) I created two sets of graphs, ones that showed national trends and others that split based on region. 
+
+#### Interval Level Variables for Health
+
+First, I looked at the linear relationships between quantified values (number of poor mental health days, number of days of activity limitation). 
+
+``` {r linears nat}
+xyplot (Sample$mentalcl~Sample$ratetonecl,
+        ylim=range(0:30),
+        y.jitter=TRUE,
+        x.jitter=TRUE,
+        type = c("p", "r"),
+        auto.key=TRUE,
+        xlab = "Assigned Skin Tone of R",
+        ylab = "Days of Poor Mental Health")
+
+xyplot (Sample$healthdayscl~Sample$ratetonecl,
+        ylim=range(0:30),
+        y.jitter=TRUE,
+        x.jitter=TRUE,
+        type = c("p", "r"),
+        auto.key=TRUE,
+        xlab = "Assigned Skin Tone of R",
+        ylab = "Days of Activity Limitation")
+```
+
+I then did the same, but split the trend lines based on region. 
+
+```{r linear reg}
+xyplot (Sample$mentalcl~Sample$ratetonecl,
+        ylim=range(0:30),
+        y.jitter=TRUE,
+        x.jitter=TRUE,
+        type = c("p", "r"),
+        group = Sample$region, auto.key=TRUE,
+        xlab = "Assigned Skin Tone of R",
+        ylab = "Days of Poor Mental Health")
+
+xyplot (Sample$healthdayscl~Sample$ratetonecl,
+        ylim=range(0:30),
+        y.jitter=TRUE,
+        x.jitter=TRUE,
+        type = c("p", "r"),
+        group = Sample$region, auto.key=TRUE,
+        xlab = "Assigned Skin Tone of R",
+        ylab = "Days of Activity Limitation")
+```
+
+#### Ordinal Level Variables for Health
+Finally, I followed the same approach for categorical values such as self rated health. I used histograms to show the distribution of self rated health overall and then by skin tone.  It is important to note that I had to change Rate Tone to a factor so that the regional histogram would accurately label the subdivision when I compared individual skin tone self rated health in the second graph. 
+```{r self rated health}
+Sample$ratetonecl<-as.factor(Sample$ratetonecl)
+histogram(Sample$healthcl,
+          xlab = "Self Rated Health",
+          main = "Distribution of Self Rated Health, Overall",
+          type = "percent",
+          col = c("purple"))
+histogram(~healthcl | ratetonecl,data=Sample,
+          xlab = "Self Rated Health",
+          main = "Distribution of Self Rated Health, by Skin Tone",
+          type = "percent",
+          col = c("purple"))
+```

@@ -1,0 +1,701 @@
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\warren.651\Box\Strat\Cleaning.log
+  log type:  text
+ opened on:  13 Nov 2019, 17:13:50
+
+. 
+. ** Open Data and Building working Data
+. use "ColorismRaw.dta", clear
+
+. save "ColorismWorking.dta", replace
+file ColorismWorking.dta saved
+
+. 
+. //examine and clean the data
+. codebook region
+
+-------------------------------------------------------------------------------
+region                                                      Region of interview
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  gsp001x
+
+                 range:  [1,9]                        units:  1
+         unique values:  9                        missing .:  0/9,727
+
+            tabulation:  Freq.   Numeric  Label
+                           538         1  New england
+                         1,076         2  Middle atlantic
+                         1,648         3  E. nor. central
+                           590         4  W. nor. central
+                         1,998         5  South atlantic
+                           647         6  E. sou. central
+                         1,028         7  W. sou. central
+                           790         8  Mountain
+                         1,412         9  Pacific
+
+. describe region
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+region          float   %15.0g     gsp001x    Region of interview
+
+. tab region, m
+
+      Region of |
+      interview |      Freq.     Percent        Cum.
+----------------+-----------------------------------
+    New england |        538        5.53        5.53
+Middle atlantic |      1,076       11.06       16.59
+E. nor. central |      1,648       16.94       33.54
+W. nor. central |        590        6.07       39.60
+ South atlantic |      1,998       20.54       60.14
+E. sou. central |        647        6.65       66.79
+W. sou. central |      1,028       10.57       77.36
+       Mountain |        790        8.12       85.48
+        Pacific |      1,412       14.52      100.00
+----------------+-----------------------------------
+          Total |      9,727      100.00
+
+. 
+. //region is already cleaned! leave as is
+. 
+. codebook health
+
+-------------------------------------------------------------------------------
+health                                                      Condition of health
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  gsp002x
+
+                 range:  [0,9]                        units:  1
+         unique values:  7                        missing .:  0/9,727
+
+            tabulation:  Freq.   Numeric  Label
+                         3,243         0  Not applicable
+                         1,568         1  Excellent
+                         3,090         2  Good
+                         1,400         3  Fair
+                           412         4  Poor
+                            10         8  Don't know
+                             4         9  No answer
+
+. describe health
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+health          float   %14.0g     gsp002x    Condition of health
+
+. tab health, m
+
+  Condition of |
+        health |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+Not applicable |      3,243       33.34       33.34
+     Excellent |      1,568       16.12       49.46
+          Good |      3,090       31.77       81.23
+          Fair |      1,400       14.39       95.62
+          Poor |        412        4.24       99.86
+    Don't know |         10        0.10       99.96
+     No answer |          4        0.04      100.00
+---------------+-----------------------------------
+         Total |      9,727      100.00
+
+. 
+. gen healthcl=health
+
+. replace healthcl=. if health==8|health==9|health==0
+(3,257 real changes made, 3,257 to missing)
+
+. label variable healthcl "Cleaned General Health of R"
+
+. label define healthqual 4"Poor" 3"Fair" 2"Good" 1"Excellent"
+
+. label values healthcl healthqual
+
+. 
+. codebook healthcl
+
+-------------------------------------------------------------------------------
+healthcl                                            Cleaned General Health of R
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  healthqual
+
+                 range:  [1,4]                        units:  1
+         unique values:  4                        missing .:  3,257/9,727
+
+            tabulation:  Freq.   Numeric  Label
+                         1,568         1  Excellent
+                         3,090         2  Good
+                         1,400         3  Fair
+                           412         4  Poor
+                         3,257         .  
+
+. describe healthcl
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+healthcl        float   %9.0g      healthqual
+                                              Cleaned General Health of R
+
+. tab healthcl, m
+
+    Cleaned |
+    General |
+Health of R |      Freq.     Percent        Cum.
+------------+-----------------------------------
+  Excellent |      1,568       16.12       16.12
+       Good |      3,090       31.77       47.89
+       Fair |      1,400       14.39       62.28
+       Poor |        412        4.24       66.52
+          . |      3,257       33.48      100.00
+------------+-----------------------------------
+      Total |      9,727      100.00
+
+. 
+. codebook health1
+
+-------------------------------------------------------------------------------
+health1                                                    Rs health in general
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  gsp003x
+
+                 range:  [0,9]                        units:  1
+         unique values:  8                        missing .:  0/9,727
+
+            tabulation:  Freq.   Numeric  Label
+                         7,029         0  Not applicable
+                           596         1  Excellent
+                           835         2  Very good
+                           834         3  Good
+                           349         4  Fair
+                            46         5  Poor
+                             4         8  Dont know
+                            34         9  No answer
+
+. describe health1
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+health1         float   %14.0g     gsp003x    Rs health in general
+
+. tab health1, m
+
+  Rs health in |
+       general |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+Not applicable |      7,029       72.26       72.26
+     Excellent |        596        6.13       78.39
+     Very good |        835        8.58       86.97
+          Good |        834        8.57       95.55
+          Fair |        349        3.59       99.14
+          Poor |         46        0.47       99.61
+     Dont know |          4        0.04       99.65
+     No answer |         34        0.35      100.00
+---------------+-----------------------------------
+         Total |      9,727      100.00
+
+. 
+. gen health1cl=health1
+
+. replace health1cl=. if health1==8|health1==9|health1==0
+(7,067 real changes made, 7,067 to missing)
+
+. label variable health1cl "Cleaned SECONDARY General Health of R"
+
+. label define health1qual 5"Poor" 4"Fair" 3"Good" 2"Very Good" 1"Excellent"
+
+. label values health1cl health1qual
+
+. 
+. codebook health1cl
+
+-------------------------------------------------------------------------------
+health1cl                                 Cleaned SECONDARY General Health of R
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  health1qual
+
+                 range:  [1,5]                        units:  1
+         unique values:  5                        missing .:  7,067/9,727
+
+            tabulation:  Freq.   Numeric  Label
+                           596         1  Excellent
+                           835         2  Very Good
+                           834         3  Good
+                           349         4  Fair
+                            46         5  Poor
+                         7,067         .  
+
+. describe health1cl
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+health1cl       float   %9.0g      health1qual
+                                              Cleaned SECONDARY General Health
+                                                of R
+
+. tab health1cl, m
+
+    Cleaned |
+  SECONDARY |
+    General |
+Health of R |      Freq.     Percent        Cum.
+------------+-----------------------------------
+  Excellent |        596        6.13        6.13
+  Very Good |        835        8.58       14.71
+       Good |        834        8.57       23.29
+       Fair |        349        3.59       26.87
+       Poor |         46        0.47       27.35
+          . |      7,067       72.65      100.00
+------------+-----------------------------------
+      Total |      9,727      100.00
+
+. 
+. recode health1cl 1=2
+(health1cl: 596 changes made)
+
+. label define health1qualcollapsed 5"Poor" 4"Fair" 3"Good" 2"Excellent"
+
+. label values health1cl health1qualcollapsed
+
+. 
+. codebook health1cl
+
+-------------------------------------------------------------------------------
+health1cl                                 Cleaned SECONDARY General Health of R
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  health1qualcollapsed
+
+                 range:  [2,5]                        units:  1
+         unique values:  4                        missing .:  7,067/9,727
+
+            tabulation:  Freq.   Numeric  Label
+                         1,431         2  Excellent
+                           834         3  Good
+                           349         4  Fair
+                            46         5  Poor
+                         7,067         .  
+
+. describe health1cl
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+health1cl       float   %9.0g      health1qualcollapsed
+                                              Cleaned SECONDARY General Health
+                                                of R
+
+. tab health1cl, m
+
+    Cleaned |
+  SECONDARY |
+    General |
+Health of R |      Freq.     Percent        Cum.
+------------+-----------------------------------
+  Excellent |      1,431       14.71       14.71
+       Good |        834        8.57       23.29
+       Fair |        349        3.59       26.87
+       Poor |         46        0.47       27.35
+          . |      7,067       72.65      100.00
+------------+-----------------------------------
+      Total |      9,727      100.00
+
+. 
+. codebook mntlhlth
+
+-------------------------------------------------------------------------------
+mntlhlth                                Days of poor mental health past 30 days
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  gsp004x, but 28 nonmissing values are not labeled
+
+                 range:  [-1,99]                      units:  1
+         unique values:  31                       missing .:  0/9,727
+
+              examples:  -1    Not applicable
+                         -1    Not applicable
+                         0     
+                         2     
+
+. describe mntlhlth
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+mntlhlth        float   %14.0g     gsp004x    Days of poor mental health past
+                                                30 days
+
+. tab mntlhlth
+
+  Days of poor |
+ mental health |
+  past 30 days |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+Not applicable |      4,728       48.61       48.61
+             0 |      2,711       27.87       76.48
+             1 |        259        2.66       79.14
+             2 |        400        4.11       83.25
+             3 |        260        2.67       85.93
+             4 |        123        1.26       87.19
+             5 |        286        2.94       90.13
+             6 |         26        0.27       90.40
+             7 |         90        0.93       91.32
+             8 |         21        0.22       91.54
+             9 |          4        0.04       91.58
+            10 |        188        1.93       93.51
+            11 |          1        0.01       93.52
+            12 |         18        0.19       93.71
+            14 |         35        0.36       94.07
+            15 |        137        1.41       95.48
+            16 |          7        0.07       95.55
+            17 |          2        0.02       95.57
+            18 |          3        0.03       95.60
+            20 |         87        0.89       96.49
+            21 |          6        0.06       96.56
+            22 |          3        0.03       96.59
+            24 |          3        0.03       96.62
+            25 |         21        0.22       96.83
+            26 |          1        0.01       96.84
+            27 |          2        0.02       96.86
+            28 |          4        0.04       96.91
+            29 |          6        0.06       96.97
+            30 |        183        1.88       98.85
+     Dont know |         28        0.29       99.14
+     No answer |         84        0.86      100.00
+---------------+-----------------------------------
+         Total |      9,727      100.00
+
+. 
+. gen mentalcl=mntlhlth
+
+. replace mentalcl=. if mentalcl==-1|mentalcl==8|mentalcl==9
+(4,753 real changes made, 4,753 to missing)
+
+. label variable mentalcl "Cleaned days of poor mental health"
+
+. 
+. codebook mentalcl
+
+-------------------------------------------------------------------------------
+mentalcl                                     Cleaned days of poor mental health
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,99]                       units:  1
+         unique values:  28                       missing .:  4,753/9,727
+
+                  mean:   5.79895
+              std. dev:   15.7582
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 0         0         0         4        15
+
+. describe mentalcl
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+mentalcl        float   %9.0g                 Cleaned days of poor mental
+                                                health
+
+. tab mentalcl, m
+
+    Cleaned |
+    days of |
+poor mental |
+     health |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,711       27.87       27.87
+          1 |        259        2.66       30.53
+          2 |        400        4.11       34.65
+          3 |        260        2.67       37.32
+          4 |        123        1.26       38.58
+          5 |        286        2.94       41.52
+          6 |         26        0.27       41.79
+          7 |         90        0.93       42.72
+         10 |        188        1.93       44.65
+         11 |          1        0.01       44.66
+         12 |         18        0.19       44.84
+         14 |         35        0.36       45.20
+         15 |        137        1.41       46.61
+         16 |          7        0.07       46.68
+         17 |          2        0.02       46.71
+         18 |          3        0.03       46.74
+         20 |         87        0.89       47.63
+         21 |          6        0.06       47.69
+         22 |          3        0.03       47.72
+         24 |          3        0.03       47.75
+         25 |         21        0.22       47.97
+         26 |          1        0.01       47.98
+         27 |          2        0.02       48.00
+         28 |          4        0.04       48.04
+         29 |          6        0.06       48.10
+         30 |        183        1.88       49.98
+         98 |         28        0.29       50.27
+         99 |         84        0.86       51.14
+          . |      4,753       48.86      100.00
+------------+-----------------------------------
+      Total |      9,727      100.00
+
+. 
+. codebook hlthdays
+
+-------------------------------------------------------------------------------
+hlthdays                               Days of activity limitation past 30 days
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  gsp005x, but 20 nonmissing values are not labeled
+
+                 range:  [-1,99]                      units:  1
+         unique values:  23                       missing .:  0/9,727
+
+              examples:  -1    Not applicable
+                         -1    Not applicable
+                         -1    Not applicable
+                         0     
+
+. describe hlthdays
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+hlthdays        float   %14.0g     gsp005x    Days of activity limitation past
+                                                30 days
+
+. tab hlthdays, m
+
+       Days of |
+      activity |
+    limitation |
+  past 30 days |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+Not applicable |      7,029       72.26       72.26
+             0 |      2,084       21.42       93.69
+             1 |        103        1.06       94.75
+             2 |        121        1.24       95.99
+             3 |         63        0.65       96.64
+             4 |         31        0.32       96.96
+             5 |         68        0.70       97.66
+             6 |          5        0.05       97.71
+             7 |         38        0.39       98.10
+             8 |          7        0.07       98.17
+             9 |          3        0.03       98.20
+            10 |         38        0.39       98.59
+            12 |          5        0.05       98.64
+            14 |         11        0.11       98.76
+            15 |         28        0.29       99.04
+            20 |         15        0.15       99.20
+            22 |          1        0.01       99.21
+            25 |          4        0.04       99.25
+            26 |          1        0.01       99.26
+            27 |          1        0.01       99.27
+            30 |         25        0.26       99.53
+     Dont know |          4        0.04       99.57
+     No answer |         42        0.43      100.00
+---------------+-----------------------------------
+         Total |      9,727      100.00
+
+. 
+. gen healthdayscl=hlthdays
+
+. replace healthdayscl=. if hlthdays==-1|hlthdays==8|hlthdays==9
+(7,039 real changes made, 7,039 to missing)
+
+. label variable healthdayscl "Cleaned days of activity limitation"
+
+. 
+. codebook healthdayscl
+
+-------------------------------------------------------------------------------
+healthdayscl                                Cleaned days of activity limitation
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [0,99]                       units:  1
+         unique values:  20                       missing .:  7,039/9,727
+
+                  mean:   3.00707
+              std. dev:   13.3238
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 0         0         0         0         5
+
+. describe healthdayscl
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+healthdayscl    float   %9.0g                 Cleaned days of activity
+                                                limitation
+
+. tab healthdayscl, m
+
+    Cleaned |
+    days of |
+   activity |
+ limitation |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      2,084       21.42       21.42
+          1 |        103        1.06       22.48
+          2 |        121        1.24       23.73
+          3 |         63        0.65       24.38
+          4 |         31        0.32       24.69
+          5 |         68        0.70       25.39
+          6 |          5        0.05       25.44
+          7 |         38        0.39       25.84
+         10 |         38        0.39       26.23
+         12 |          5        0.05       26.28
+         14 |         11        0.11       26.39
+         15 |         28        0.29       26.68
+         20 |         15        0.15       26.83
+         22 |          1        0.01       26.84
+         25 |          4        0.04       26.88
+         26 |          1        0.01       26.89
+         27 |          1        0.01       26.90
+         30 |         25        0.26       27.16
+         98 |          4        0.04       27.20
+         99 |         42        0.43       27.63
+          . |      7,039       72.37      100.00
+------------+-----------------------------------
+      Total |      9,727      100.00
+
+. 
+. codebook ratetone
+
+-------------------------------------------------------------------------------
+ratetone                                     R's facial coloring by interviewer
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+                 label:  gsp006x, but 8 nonmissing values are not labeled
+
+                 range:  [1,99]                       units:  1
+         unique values:  11                       missing .:  0/9,727
+
+              examples:  1     Lightest
+                         2     
+                         2     
+                         6     
+
+. describe ratetone
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+ratetone        float   %14.0g     gsp006x    R's facial coloring by
+                                                interviewer
+
+. tab ratetone, m
+
+    R's facial |
+   coloring by |
+   interviewer |      Freq.     Percent        Cum.
+---------------+-----------------------------------
+      Lightest |      3,559       36.59       36.59
+             2 |      2,385       24.52       61.11
+             3 |        992       10.20       71.31
+             4 |        480        4.93       76.24
+             5 |        360        3.70       79.94
+             6 |        247        2.54       82.48
+             7 |        258        2.65       85.13
+             8 |        195        2.00       87.14
+             9 |         83        0.85       87.99
+       Darkest |         36        0.37       88.36
+     No answer |      1,132       11.64      100.00
+---------------+-----------------------------------
+         Total |      9,727      100.00
+
+. 
+. gen ratetonecl=ratetone
+
+. replace ratetonecl=. if ratetone==99
+(1,132 real changes made, 1,132 to missing)
+
+. label variable ratetonecl "Cleaned Interviewer Assessed Skin Tone of R"
+
+. 
+. codebook ratetonecl
+
+-------------------------------------------------------------------------------
+ratetonecl                          Cleaned Interviewer Assessed Skin Tone of R
+-------------------------------------------------------------------------------
+
+                  type:  numeric (float)
+
+                 range:  [1,10]                       units:  1
+         unique values:  10                       missing .:  1,132/9,727
+
+                  mean:   2.44095
+              std. dev:    1.9246
+
+           percentiles:        10%       25%       50%       75%       90%
+                                 1         1         2         3         5
+
+. describe ratetonecl
+
+              storage   display    value
+variable name   type    format     label      variable label
+-------------------------------------------------------------------------------
+ratetonecl      float   %9.0g                 Cleaned Interviewer Assessed Skin
+                                                Tone of R
+
+. tab ratetonecl, m
+
+    Cleaned |
+Interviewer |
+   Assessed |
+  Skin Tone |
+       of R |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          1 |      3,559       36.59       36.59
+          2 |      2,385       24.52       61.11
+          3 |        992       10.20       71.31
+          4 |        480        4.93       76.24
+          5 |        360        3.70       79.94
+          6 |        247        2.54       82.48
+          7 |        258        2.65       85.13
+          8 |        195        2.00       87.14
+          9 |         83        0.85       87.99
+         10 |         36        0.37       88.36
+          . |      1,132       11.64      100.00
+------------+-----------------------------------
+      Total |      9,727      100.00
+
+. 
+. //Restrict the analytic sample to only those who have a response for skin ton
+> e
+. 
+. keep if ratetonecl!=.
+(1,132 observations deleted)
+
+. keep id year id_ region ballot healthcl health1cl mentalcl healthdayscl ratet
+> onecl
+
+. 
+. save "ColorismCleaned.dta", replace
+file ColorismCleaned.dta saved
+
+. 
+end of do-file
+
+. exit, clear
