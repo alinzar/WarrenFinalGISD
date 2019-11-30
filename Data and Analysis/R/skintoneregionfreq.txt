@@ -1,0 +1,22 @@
+% latex table generated in R 3.2.2 by xtable 1.8-4 package
+% Sat Nov 30 12:22:12 2019
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 \\ 
+  \hline
+New England & 281 & 119 & 20 & 10 &  8 &  6 &  3 &  4 &  0 & 12 \\ 
+  Mid Atlantic & 425 & 182 & 92 & 42 & 59 & 27 & 24 & 31 & 11 &  6 \\ 
+  E. Nor. Central & 745 & 455 & 137 & 55 & 32 & 31 & 32 & 16 &  8 &  1 \\ 
+  W. Nor. Central & 213 & 152 & 75 & 33 & 18 & 18 & 11 &  8 &  2 &  1 \\ 
+  South Atlantic & 697 & 451 & 160 & 96 & 93 & 78 & 102 & 68 & 30 & 14 \\ 
+  E. Sou. Central & 226 & 131 & 55 & 37 & 44 & 23 & 30 & 20 &  5 &  0 \\ 
+  W. Sou. Central & 271 & 274 & 148 & 72 & 35 & 32 & 24 & 29 & 15 &  1 \\ 
+  Mountain & 272 & 250 & 91 & 37 & 23 & 16 & 16 &  8 &  3 &  0 \\ 
+  Pacific & 429 & 371 & 214 & 98 & 48 & 16 & 16 & 11 &  9 &  1 \\ 
+   \hline
+\end{tabular}
+\caption{Skin Tone Frequency by Region} 
+\label{tab:table1}
+\end{table}

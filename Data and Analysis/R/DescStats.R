@@ -8,6 +8,7 @@ library (readstata13)
 library (haven)
 library (lattice)
 library (stargazer)
+library (xtable)
 
 
 #Data has been cleaned in stata and analytic sample has been restricted.
@@ -56,6 +57,13 @@ histogram(Sample$ratetonecl,
           type = "count",
           breaks=c(1,2,3,4,5,6,7,8,9,10),
           col = c("purple"))
+
+#Descriptive Table (Frequency of Skin Tone and Region)
+crosstab<- xtabs(~Sample$region+Sample$ratetonecl)
+ftable(crosstab)
+as.matrix(crosstab)
+ltable <-xtable(crosstab,caption="Skin Tone Frequency by Region",digits=1,label="tab:table1")
+capture.output(ltable,file="skintoneregionfreq.txt")
 
 #Analytic Plots
 xyplot (Sample$mentalcl~Sample$ratetonecl,
